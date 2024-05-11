@@ -1,0 +1,83 @@
+from abc import ABC, abstractmethod
+
+import requests
+
+
+class ClassAPI(ABC):
+    """Абстрактный класс API"""
+
+    @abstractmethod
+    def get_api_request(self, *args):
+        """Метод абстрактного класса для получения запроса к API"""
+        pass
+
+
+class HeadHunterAPI(ClassAPI):
+    """Класс для получения API запроса к HeadHunter"""
+
+    def __init__(self, *args):
+        """
+        Метод инициализации
+        :param args: параметры для поиска вакансий
+        """
+        self.url = "https://api.hh.ru/vacancies"
+        self.headers = {'User-Agent': 'HH-User-Agent'}
+        self.params = {
+            "text": args[0],
+            "area": 113,
+            "only_with_salary": True,
+            "page": 0,
+            "per_page": 100  # Количество вакансий на страницу
+        }
+
+    def get_api_request(self, *args):
+        """ Метод класса HeadHunterAPI для
+        получения API запроса к HeadHunter
+        о вакансиях
+        :return: json результат API запроса к HeadHunter"""
+
+        vacancies = []
+        page = 20  # Количество страниц
+        while self.params.get('page') != page:
+            response = requests.get(self.url, headers=self.headers, params=self.params)
+
+            if response.status_code == 200:
+                vacancies_data = response.json()['items']
+                vacancies.extend(vacancies_data)
+                self.params['page'] += 1
+                #  print(draw_progress_bar(self.params['page'], page))
+                print(f'\rЗагружено: {draw_progress_bar(self.params['page'], page)}', end='')
+
+            else:
+                print("Ошибка при запросе вакансий:", response.status_code)
+                exit()
+
+        print(' Всего вакансий:', len(vacancies))
+        return vacancies
+
+    def __str__(self):
+        q = self.url + '?' + '&'.join([f'{key}={value}' for key, value in self.params.items()])
+        return q
+
+    def __repr__(self):
+        return f"{self.url}?{'&'.join(f'{key}={value}' for key, value in self.params.items())}"
+
+
+class CurrencyExchangeAPI(ClassAPI):
+    """ Класс для получения API запроса к API Центробанка"""
+
+    def get_api_request(self, *args):
+        """ Метод класса CurrencyExchangeAPI для
+        получения API запроса к API Центробанка
+        о курсе валюты
+        :return: результат API запроса к API Центробанка"""
+
+        return
+
+
+def draw_progress_bar(current, total, bar_length=15):
+    progress = current / total
+    num_ticks = int(bar_length * progress)
+    bar = '[' + '#' * num_ticks + '_' * (bar_length - num_ticks) + ']'
+    percentage = int(progress * 100)
+    return f'{bar} {percentage}%'
