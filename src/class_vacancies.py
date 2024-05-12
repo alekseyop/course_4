@@ -1,7 +1,11 @@
+import os
 from abc import ABC, abstractmethod
-
+from config import ROOT_DIR
+from os import path
 from src.class_api import HeadHunterAPI
 
+
+print(ROOT_DIR)
 
 class VacancyClass(ABC):
     """ Абстрактный класс для получения вакансий """
