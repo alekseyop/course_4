@@ -37,7 +37,8 @@ class HeadHunterAPI(ClassAPI):
         :return: json результат API запроса к HeadHunter"""
 
         vacancies = []
-        page = 20  # Количество страниц
+        page = args[1]//100 + 1
+        # page = 20  # Количество страниц
         while self.params.get('page') != page:
             response = requests.get(self.url, headers=self.headers, params=self.params)
 
@@ -45,15 +46,14 @@ class HeadHunterAPI(ClassAPI):
                 vacancies_data = response.json()['items']
                 vacancies.extend(vacancies_data)
                 self.params['page'] += 1
-                #  print(draw_progress_bar(self.params['page'], page))
-                print(f'\rЗагружено: {draw_progress_bar(self.params['page'], page)}', end='')
+                print(f'\rЗагружено: {draw_progress_bar(self.params['page'], page)} ', end='')
 
             else:
                 print("Ошибка при запросе вакансий:", response.status_code)
-                exit()
+                break
 
-        print(' Всего вакансий:', len(vacancies))
-        return vacancies
+        print('Всего вакансий:', len(vacancies[:args[1]]))
+        return vacancies[:args[1]]
 
     def __str__(self):
         q = self.url + '?' + '&'.join([f'{key}={value}' for key, value in self.params.items()])
@@ -75,7 +75,7 @@ class CurrencyExchangeAPI(ClassAPI):
         return
 
 
-def draw_progress_bar(current, total, bar_length=15):
+def draw_progress_bar(current: int, total: int, bar_length: int=30):
     progress = current / total
     num_ticks = int(bar_length * progress)
     bar = '[' + '#' * num_ticks + '_' * (bar_length - num_ticks) + ']'
