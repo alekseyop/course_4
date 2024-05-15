@@ -66,13 +66,18 @@ class HeadHunterAPI(ClassAPI):
 class CurrencyExchangeAPI(ClassAPI):
     """ Класс для получения API запроса к API Центробанка"""
 
-    def get_api_request(self, *args):
+    def get_api_request(self: str, *args):
         """ Метод класса CurrencyExchangeAPI для
         получения API запроса к API Центробанка
         о курсе валюты
         :return: результат API запроса к API Центробанка"""
 
-        return
+        # def get_currency_exchange_rate(base_currency, target_currency):
+        url = f"https://api.exchangerate-api.com/v4/latest/{self}"
+        response = requests.get(url)
+        data = response.json()
+        rates = data["rates"]
+        return rates
 
 
 def draw_progress_bar(current: int, total: int, bar_length: int=30):
