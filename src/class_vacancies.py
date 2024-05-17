@@ -50,6 +50,22 @@ class Vacancy(VacancyClass):
             self.responsibility = str(args[0]['snippet']['responsibility']).replace(
                 "<highlighttext>", "").replace("</highlighttext>", "")
 
+    def del_vacancy(self):
+        """ Метод для удаления вакансий"""
+        try:
+            print(self)
+        except NameError as e:
+            print("Экземпляр класса Vacancy был удален: ", e)
+        del self
+
+    def add_vacancy(self, *args):
+        """ Метод для добавления вакансий
+        :param args: параметры вакансии
+        :return:  в виде списка словарей json
+        """
+        return self.append(args[0])
+
+
     def get_vacancies(self, *args):
         """ Метод для получения вакансий
         :param args: параметры для поиска вакансий
@@ -72,15 +88,6 @@ class Vacancy(VacancyClass):
         Vacancy.json_saver(self, list_vacancies)
 
         return list_vacancies
-
-        # for i in list_vacancies:
-        #     print(repr(i))
-        #     print(i)
-        # list_vacancies_sorted = sorted(list_vacancies, key=lambda x: (x.salary.get('from'), x.salary.get('to')))
-        # print('\n')
-        # for i in list_vacancies_sorted:
-        #     print(repr(i))
-        #     # print(i)
 
     def __repr__(self):
         return (f"{self.__id}, {self.name}, {self.area}, {self.url}, {self.salary},"

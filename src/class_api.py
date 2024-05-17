@@ -40,6 +40,8 @@ class HeadHunterAPI(ClassAPI):
         page = args[1]//100 + 1
         # page = 20  # Количество страниц
         while self.params.get('page') != page:
+            if self.params.get('page') == page - 1:
+                self.params['per_page'] = args[1] % 100
             response = requests.get(self.url, headers=self.headers, params=self.params)
 
             if response.status_code == 200:
@@ -52,8 +54,10 @@ class HeadHunterAPI(ClassAPI):
                 print("Ошибка при запросе вакансий:", response.status_code)
                 break
 
-        print('Всего вакансий:', len(vacancies[:args[1]]))
-        return vacancies[:args[1]]
+        print(f'\nВсего вакансий: {len(vacancies)}')
+        return vacancies
+        # print('Всего вакансий:', len(vacancies[:args[1]]))
+        # return vacancies[:args[1]]
 
     def __str__(self):
         q = self.url + '?' + '&'.join([f'{key}={value}' for key, value in self.params.items()])
