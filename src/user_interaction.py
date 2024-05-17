@@ -14,7 +14,8 @@ def user_interaction():
     job_request = input('Введите вакансию(например: Python, Python developer, Back-end developer): ')
     job_request_count = 'a'
     while not job_request_count.isdigit():
-        job_request_count = input('Введите количество вакансий(целое положительное число до 2000 иначе выход): ')
+        job_request_count = input('Введите количество вакансий(целое положительное число 0 - 2000 если вне диапазона '
+                                  'выход): ')
     job_request_count = int(job_request_count)
     print()
     if job_request_count < 1 or job_request_count > 2001:
