@@ -11,7 +11,7 @@ from src.class_vacancies import Vacancy
 def user_interaction():
     print('Программа, которая собирает информацию о вакансиях с платформы hh.ru в России,'
           ' сохраняет её в файл и позволяет удобно работать с ней')
-    job_request = input('Введите вакансию(например: Python, Python developer, Back-end developer): ')
+    job_request = input('Введите вакансию(например: Python, Python developer, комбайнер): ')
     job_request_count = 'a'
     while not job_request_count.isdigit():
         job_request_count = input('Введите количество вакансий(целое положительное число 0 - 2000 если вне диапазона '
@@ -35,7 +35,7 @@ def user_interaction():
                        '5 - Сортировать вакансии по зарплате по возрастанию\n'
                        '6 - Сортировать вакансии по зарплате по убыванию\n'
                        '7 - Сформировать JSON с вакансиями по ключевым словам\n'
-                       '8 - Сформировать JSON с вакансиями по зарплате\n'
+                       '8 - Сформировать JSON с вакансиями по размеру зарплаты\n'
                        '9 - Сменить валюту в вакансиях\n'
                        '10 - Сформировать первоначальный JSON с вакансиями\n'
                        '0 - Выход\n')
@@ -64,9 +64,12 @@ def user_interaction():
         elif action == '7':
             new_vacancies = filter_vacancies_by_keywords(vacancies)
             list_vacancies = Vacancy().cast_to_object_list(new_vacancies)
-            pass
+            continue
         elif action == '8':
-            pass
+            print("WARNING! Приведите все вакансии к одной валюте(если требуется)")
+            new_vacancies = filter_vacancies_by_salary(vacancies)
+            list_vacancies = Vacancy().cast_to_object_list(new_vacancies)
+            continue
         elif action == '9':
             new_vacancies = currency_converter(vacancies)
             list_vacancies = Vacancy().cast_to_object_list(new_vacancies)
@@ -228,10 +231,25 @@ def filter_vacancies_by_salary(vacancies):
     Фильтрация вакансий по зарплате
     :return:
     """
-    salary_from = int(input('Введите минимальную зарплату: '))
-    salary_to = int(input('Введите максимальную зарплату: '))
-    pass
-    return
+    salary_from = input('Введите минимальную зарплату(число): ')
+    salary_to = input('Введите максимальную зарплату(число): ')
+    if not salary_from.isdigit() or not salary_to.isdigit():
+        print('Минимальная и максимальная зарплата должны быть числами')
+        return vacancies
+    salary_from = int(salary_from)
+    salary_to = int(salary_to)
+    if salary_from > salary_to:
+        print('Максимальная зарплата должна быть больше минимальной')
+        return vacancies
+    new_vacancies = []
+    for item in vacancies:
+        from_vac = item['salary']['from']
+        to_vac = item['salary']['to'] if item['salary']['to'] != 0 else 100000000
+        if from_vac <= salary_from <= to_vac or to_vac <= salary_to <= to_vac:
+            new_vacancies.append(item)
+
+    print(f'Найдено {len(new_vacancies)} вакансий')
+    return new_vacancies
 
 
 def filter_vacancies_by_keywords(vacancies):
