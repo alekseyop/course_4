@@ -4,6 +4,7 @@ import os
 import pandas as pd
 
 from config import ROOT_DIR
+from src.VacancyManager import VacancyManagerJSON
 from src.class_api import CurrencyExchangeAPI
 from src.class_vacancies import Vacancy
 
@@ -24,6 +25,7 @@ def user_interaction():
     vacancies = Vacancy().get_vacancies(job_request, job_request_count)
     print()
     list_vacancies = Vacancy().cast_to_object_list(vacancies)
+    VacancyManagerJSON().json_saver(list_vacancies)
 
     action = '1'
     while action != '0':
@@ -77,6 +79,7 @@ def user_interaction():
         elif action == '10':
             vacancies = Vacancy().get_vacancies(job_request, job_request_count)
             list_vacancies = Vacancy().cast_to_object_list(vacancies)
+            VacancyManagerJSON().json_saver(list_vacancies)
             continue
         elif action == '0':
             print('Пока)')

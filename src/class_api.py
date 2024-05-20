@@ -38,7 +38,6 @@ class HeadHunterAPI(ClassAPI):
 
         vacancies = []
         page = args[1]//100 + 1
-        # page = 20  # Количество страниц
         while self.params.get('page') != page:
             if self.params.get('page') == page - 1:
                 self.params['per_page'] = args[1] % 100
@@ -56,8 +55,6 @@ class HeadHunterAPI(ClassAPI):
 
         print(f'\nВсего вакансий: {len(vacancies)}')
         return vacancies
-        # print('Всего вакансий:', len(vacancies[:args[1]]))
-        # return vacancies[:args[1]]
 
     def __str__(self):
         q = self.url + '?' + '&'.join([f'{key}={value}' for key, value in self.params.items()])
