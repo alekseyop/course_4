@@ -4,6 +4,7 @@ import os
 import pandas as pd
 
 from config import ROOT_DIR
+from config import DATA_DIR
 from src.VacancyManager import VacancyManagerJSON
 from src.class_api import CurrencyExchangeAPI
 from src.class_vacancies import Vacancy
@@ -112,7 +113,7 @@ def print_table():
     :param :
     :return:
     """
-    file_full_name = os.path.join(ROOT_DIR, 'data', 'vacancies.json')
+    file_full_name = os.path.join(DATA_DIR, 'vacancies.json')
     with open(file_full_name, 'r', encoding='utf-8') as f:
         data1 = json.load(f)
 
@@ -140,7 +141,6 @@ def print_table():
         column_widths[key] = max(column_widths[key], len(key))
 
     # Выводим заголовки таблицы
-    # with open("output.txt", "w") as f:
     for key in keys:
         text_table += (f"{key.ljust(column_widths[key])} | ")
     text_table += ('\n')
@@ -157,7 +157,7 @@ def print_table():
         text_table += ('\n')
 
     print(text_table)
-    file_full_name = os.path.join(ROOT_DIR, 'data', 'output.txt')
+    file_full_name = os.path.join(DATA_DIR, 'output.txt')
     with open(file_full_name, "w", encoding='utf-8') as f:
         # f.write(text_table)
         print(text_table, file=f)
@@ -170,7 +170,7 @@ def create_xlsx():
     Сохранение вакансий в файл .XLSX
     :return:
     """
-    file_full_name = os.path.join(ROOT_DIR, 'data', 'vacancies.json')
+    file_full_name = os.path.join(DATA_DIR, 'vacancies.json')
     with open(file_full_name, 'r', encoding='utf-8') as f:
         data1 = json.load(f)
 
@@ -188,7 +188,7 @@ def create_xlsx():
         }
         data.append(transformed_item)
 
-    file_full_name = os.path.join(ROOT_DIR, 'data', 'output.xlsx')
+    file_full_name = os.path.join(DATA_DIR, 'output.xlsx')
     df = pd.DataFrame(data)
     df.to_excel(file_full_name)
     print(f'Вакансии сохранены в {file_full_name}')
@@ -284,9 +284,9 @@ def filter_vacancies_by_keywords(vacancies):
     return vacancies
 
 
-def draw_progress_bar(current: int, total: int, bar_length: int = 30):
-    progress = current / total
-    num_ticks = int(bar_length * progress)
-    bar = '[' + '#' * num_ticks + '_' * (bar_length - num_ticks) + ']'
-    percentage = int(progress * 100)
-    return f'{bar} {percentage}%'
+# def draw_progress_bar(current: int, total: int, bar_length: int = 30):
+#     progress = current / total
+#     num_ticks = int(bar_length * progress)
+#     bar = '[' + '#' * num_ticks + '_' * (bar_length - num_ticks) + ']'
+#     percentage = int(progress * 100)
+#     return f'{bar} {percentage}%'
